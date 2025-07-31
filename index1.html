@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JOBSINLINE - Unleash your career potential with AI-powered resume analysis and job matching.">
+  <meta name="keywords" content="job search, resume analysis, career tools, AI job matching">
+  <meta name="author" content="JOBSINLINE Team">
+  <title>JOBSINLINE - Elevate Your Career</title>
+  <link rel="icon" type="image/png" href="Screenshot (17).png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+      <img src="Screenshot (17).png" alt="JOBSINLINE Logo" width="130" height="80">
+      <h1 style="margin: 0;"><a href="#home" aria-label="JOBSINLINE Home">JOBSINLINE</a></h1>
+    </div>
+
+    <nav aria-label="Main Navigation">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#upload">Analyze Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Scrolling banner placed after nav -->
+  <div class="scroll-banner">
+    <div class="scroll-text">📢📢 Desktop mode recommended</div>
+  </div>
+</header>
+
+
+  <section id="home" class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <h2 class="animate-text">Unleash Your Career Potential</h2>
+      <p class="animate-text">Transform your job search with AI-powered resume analysis and personalized career insights.</p>
+      <div id="loginTimestamp" class="login-timestamp animate-text"></div>
+      <a href="#upload" class="cta-button animate-text">Start Now <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <section id="about" class="about-section">
+    <div class="container">
+      <h2>About JOBSINLINE</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p><strong>JOBSINLINE – Your AI-Powered Path to Career Success</strong></p>
+          <p>At JOBSINLINE, we are redefining the job search experience by seamlessly blending the power of advanced AI with a user-centric approach. Our intelligent technology goes beyond traditional resume screening, offering a deep, data-driven analysis of your skills, experience, and career aspirations. By precisely matching your profile with your dream job roles, we provide valuable insights into your hiring potential, identifying key strengths, highlighting skill gaps, and delivering personalized recommendations to refine your resume and enhance your career prospects.</p>
+          <p>Whether you're a seasoned professional looking to elevate your career or a fresh graduate stepping into the competitive job market, JOBSINLINE equips you with the essential tools, knowledge, and strategic guidance needed to stand out. Founded with a mission to revolutionize career-building, we leverage cutting-edge data science to simplify your job search journey, ensuring that you stay ahead in today’s fast-paced professional landscape. Your dream job isn’t just a possibility—it’s within reach with JOBSINLINE, your trusted partner in career success.</p>
+        </div>
+        <div class="about-image">
+          <img src="jobsinline.png" width="400" height="700" alt="JOBSINLINE Team">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features-section">
+    <div class="container">
+      <h2>Why Choose Us?</h2>
+      <div class="features-grid">
+        <article class="feature-card">
+          <i class="fas fa-file-alt"></i>
+          <h3>AI Resume Parsing</h3>
+          <p>Extract key details with precision using advanced AI.</p>
+        </article>
+        <article class="feature-card">
+          <i class="fas fa-briefcase"></i>
+          <h3>Smart Job Matching</h3>
+          <p>Find roles tailored to your unique skills and experience.</p>
+        </article>
+        <article class="feature-card">
+          <i class="fas fa-chart-line"></i>
+          <h3>Hiring Insights</h3>
+          <p>Predict your success with data-driven probability scores.</p>
+        </article>
+        <article class="feature-card">
+          <i class="fas fa-lightbulb"></i>
+          <h3>Skill Optimization</h3>
+          <p>Get recommendations to enhance your qualifications.</p>
+        </article>
+        <article class="feature-card">
+          <i class="fas fa-comments"></i>
+          <h3>Expert Feedback</h3>
+          <p>Receive detailed, actionable resume improvement tips.</p>
+        </article>
+        <article class="feature-card">
+          <i class="fas fa-robot"></i>
+          <h3>Automated Resume Scoring</h3>
+          <p>Evaluate your resume’s strength with an AI-driven scoring system based on job requirements.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="upload" class="upload-section">
+    <div class="container">
+      <h2>Analyze Your Resume</h2>
+      <form id="resumeForm" aria-label="Resume Analysis Form">
+        <div class="form-group">
+          <label for="resume">Upload Resume (Only .PDF files allowed.)</label>
+          <input type="file" id="resume" name="resume" accept=".pdf, .doc, .docx" required aria-required="true">
+        </div>
+        <div class="form-group">
+          <label for="jobRoleSearch">Search Target Job Role</label>
+          <input type="text" id="jobRoleSearch" name="jobRoleSearch" placeholder="Type to search job roles..." aria-required="true">
+          <input type="hidden" id="jobRole" name="jobRole">
+          <div id="jobRoleSuggestions" class="suggestions-box" style="display: none;"></div>
+        </div>
+        <button type="submit" class="submit-btn">Analyze Now <i class="fas fa-upload"></i></button>
+      </form>
+    </div>
+  </section>
+
+  <section id="result" class="result-section">
+    <div class="container">
+      <h2>Your Analysis</h2>
+      <div id="loading" class="loading" style="display: none;">
+        <p>Processing your resume...</p>
+        <div class="spinner"></div>
+      </div>
+      <div id="resultContent" class="result-content"></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <div class="container">
+      <h2>Get in Touch</h2>
+      <p>Questions? Reach out to our team for support.</p>
+      <div class="contact-info">
+        <p><i class="fas fa-envelope"></i> <a href="mailto:jobsinline2982@gmail.com">jobsinline2982@gmail.com</a></p>
+        <p><i class="fas fa-map-marker-alt"></i>Ramavarapadu, Vijayawada, Andhra Pradesh-520008, INDIA</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chatbot Icon -->
+  <div id="chatbotToggle" class="chatbot-icon" data-tooltip="Talk to our AI assistant">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="chatbot-svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22 0.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+    </svg>
+  </div>
+
+  <!-- Chatbot Interface (JIL.ae style) -->
+  <div id="chatbotContainer" class="chat-app" style="display: none;">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <div class="logo">J</div>
+          <span class="app-name">JOBSINLINE AI</span>
+        </div>
+        <button class="new-chat-btn">
+          <i class="fas fa-plus"></i> <span>New Chat</span>
+        </button>
+      </div>
+      <div class="chat-history">
+        <div class="history-item active">
+          <i class="fas fa-comment-dots"></i>
+          <span>General Chat</span>
+        </div>
+      </div>
+      <div class="user-profile">
+        <div class="profile-pic">U</div>
+        <div class="user-info">
+          <span class="username">User</span>
+          <span class="user-status">Online</span>
+        </div>
+        <i class="fas fa-ellipsis-vertical"></i>
+      </div>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="header-content">
+          <h2>JOBSINLINE Assistant</h2>
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>Online</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" id="closeChatbot"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-container">
+        <input type="text" id="userInput" placeholder="Message JOBSINLINE AI..." class="chat-input">
+        <button class="send-btn" id="sendButton">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 JOBSINLINE. All rights reserved.</p>
+      <div class="social-links">
+          <a href="https://github.com/MESSK29" aria-label="GitHub" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/ekshvak-sai-malladi-9012192b4/" aria-label="LinkedIn" target="_blank" rel="noopener">
+             <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+    </div>
+  </footer>
+  <script src="scripts.js"></script>
+</body>
+</html>

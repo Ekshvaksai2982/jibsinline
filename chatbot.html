@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIL.ae - AI Assistant</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Existing CSS remains unchanged */
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1b263b;
+            --darker: #0d1b2a;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --gray-dark: #495057;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --error: #f72585;
+            --sidebar-bg: #1b263b;
+            --chat-bg: #f8f9fa;
+            --user-msg: #4361ee;
+            --bot-msg: #ffffff;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            height: 100vh;
+            display: flex;
+        }
+
+        .chat-app {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .app-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .new-chat-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .new-chat-btn:active {
+            transform: translateY(0);
+        }
+
+        .chat-history {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .history-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .history-item.active {
+            background-color: rgba(67, 97, 238, 0.2);
+            color: white;
+        }
+
+        .history-item i {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .history-item.active i {
+            color: var(--accent);
+        }
+
+        .user-profile {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: var(--gray-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .username {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Chat Container Styles */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--chat-bg);
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            z-index: 1;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-content h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--gray-dark);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-btn:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--primary);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background-color: var(--chat-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: var(--shadow);
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: var(--bot-msg);
+            color: var(--dark);
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 6px;
+            text-align: right;
+            display: block;
+        }
+
+        .bot-message .message-time {
+            color: var(--gray);
+        }
+
+        .chat-input-container {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: white;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.1);
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: var(--light);
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: var(--gray);
+        }
+
+        .input-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-btn:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--primary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .send-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .send-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            align-self: flex-start;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: var(--gray-dark);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Dark theme */
+        .dark-theme {
+            --dark: #e2e2e2;
+            --darker: #121212;
+            --light: #1e1e1e;
+            --gray: #6b6b6b;
+            --gray-dark: #8e8e8e;
+            --sidebar-bg: #121212;
+            --chat-bg: #1e1e1e;
+            --bot-msg: #2d2d2d;
+        }
+
+        .dark-theme .chat-header,
+        .dark-theme .chat-input-container {
+            background-color: #252525;
+            border-color: #333;
+        }
+
+        .dark-theme .chat-input {
+            background-color: #333;
+            border-color: #444;
+            color: white;
+        }
+
+        .dark-theme .chat-input::placeholder {
+            color: #6b6b6b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .app-name, .new-chat-btn span, .history-item span, .user-info {
+                display: none;
+            }
+            
+            .sidebar-header, .history-item, .user-profile {
+                justify-content: center;
+                padding: 16px 8px;
+            }
+            
+            .history-item {
+                padding: 16px;
+            }
+
+            .chat-header {
+                padding: 16px;
+            }
+
+            .chat-messages {
+                padding: 16px;
+            }
+
+            .chat-input-container {
+                padding: 12px 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="chat-app">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo">J</div>
+                    <span class="app-name">JIL.ae</span>
+                </div>
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i> <span>New Chat</span>
+                </button>
+            </div>
+            <div class="chat-history">
+                <div class="history-item active">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Getting Started</span>
+                </div>
+                <div class="history-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Project Ideas</span>
+                </div>
+                <div class="history-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Technical Support</span>
+                </div>
+                <div class="history-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Content Creation</span>
+                </div>
+                <div class="history-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Code Help</span>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="profile-pic">JD</div>
+                <div class="user-info">
+                    <span class="username">John Doe</span>
+                    <span class="user-status">Premium Plan</span>
+                </div>
+                <i class="fas fa-ellipsis-vertical"></i>
+            </div>
+        </div>
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="header-content">
+                    <h2>JIL.ae Assistant</h2>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>Online</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="header-btn"><i class="fas fa-robot"></i></button>
+                    <button class="header-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-container">
+                <div class="input-actions">
+                    <button class="input-btn"><i class="fas fa-paperclip"></i></button>
+                    <button class="input-btn"><i class="fas fa-microphone"></i></button>
+                </div>
+                <input type="text" id="userInput" placeholder="Message JIL.ae..." class="chat-input">
+                <button class="send-btn" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const themeToggle = document.getElementById('themeToggle');
+            let isTyping = false;
+
+            // Initial bot message
+            setTimeout(() => {
+                addMessage("Hello! I'm JIL.ae, your AI assistant powered by Google Generative AI. How can I assist you today?", 'bot-message');
+            }, 800);
+
+            // Send message function
+            async function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+
+                addMessage(message, 'user-message');
+                userInput.value = '';
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                try {
+                    // Send message to backend /chatbot endpoint
+                    const response = await fetch('http://localhost:3000/chatbot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to get response from server');
+                    }
+
+                    const data = await response.json();
+                    removeTypingIndicator();
+                    addMessage(data.response, 'bot-message');
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessage(`Sorry, something went wrong: ${error.message}`, 'bot-message');
+                }
+            }
+
+            // Add message to chat
+            function addMessage(text, className) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', className);
+                
+                const messageContent = document.createElement('div');
+                messageContent.textContent = text;
+                messageDiv.appendChild(messageContent);
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.classList.add('message-time');
+                const now = new Date();
+                timeSpan.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Show typing indicator
+            function showTypingIndicator() {
+                if (isTyping) return;
+                
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.id = 'typingIndicator';
+                
+                typingDiv.innerHTML = `
+                    <span>JIL.ae is typing</span>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                isTyping = true;
+            }
+
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+                isTyping = false;
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Theme toggle
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-theme')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+
+            // Chat history navigation (unchanged)
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    chatMessages.innerHTML = '';
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const dateString = now.toLocaleDateString();
+                    
+                    addMessage(`You opened conversation: "${this.querySelector('span').textContent}"`, 'bot-message');
+                    addMessage(`This conversation was started on ${dateString} at ${timeString}. How can I help you with this topic?`, 'bot-message');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
